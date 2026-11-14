@@ -34,7 +34,7 @@ SR/EN prekidač radi preko `data-en` atributa na elementima. Izabrani jezik se p
 Pixel ID `1097774762580497` je u `<head>` sve tri stranice.
 
 - `/landing`, `/utisci`: `PageView`.
-- `/thank-you`: `PageView` + `Lead`.
+- `/thank-you`: `PageView` + `Purchase` (value 49, currency USD).
 
-Tok: forma šalje upit na Make webhook, i tek kad webhook vrati uspeh, posetilac ide na `/thank-you/?upit=<ID>`. Lead se okida samo kad postoji parametar `upit`, sa `eventID = lead-<ID>`. Isti ID ide u Make kao polje `event_id` (za buduću deduplikaciju sa Conversions API-jem). Posle okidanja parametar se briše iz adrese, pa refresh ne duplira Lead. Direktno otvaranje `/thank-you` daje samo PageView.
+Tok: forma šalje upit na Make webhook, i tek kad webhook vrati uspeh, posetilac ide na `/thank-you/?upit=<ID>`. Purchase se okida samo kad postoji parametar `upit`, sa `eventID = purchase-<ID>`. Isti ID ide u Make kao polje `event_id` (za buduću deduplikaciju sa Conversions API-jem). Posle okidanja parametar se briše iz adrese, pa refresh ne duplira Purchase. Direktno otvaranje `/thank-you` daje samo PageView.
 

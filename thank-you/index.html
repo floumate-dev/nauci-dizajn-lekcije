@@ -36,14 +36,14 @@
   fbq('init', '1097774762580497');
   fbq('track', 'PageView');
 
-  // Lead se okida samo kad posetilac stigne posle uspešno poslatog upita (/thank-you/?upit=ID).
+  // Purchase ($49 USD) se okida samo kad posetilac stigne posle uspešno poslatog upita (/thank-you/?upit=ID).
   // Posle okidanja parametar se briše iz adrese, pa osvežavanje stranice (ili IG/FB in-app
-  // browser koji sam osveži stranicu) ne šalje Lead ponovo. Direktna poseta = samo PageView.
+  // browser koji sam osveži stranicu) ne šalje Purchase ponovo. Direktna poseta = samo PageView.
   (function(){
     var id = '';
     try { id = new URLSearchParams(window.location.search).get('upit') || ''; } catch(e){}
     if (!id) return;
-    fbq('track', 'Lead', { content_name: 'Upit za boravak' }, { eventID: 'lead-' + id });
+    fbq('track', 'Purchase', { value: 49, currency: 'USD', content_name: 'Upit za boravak' }, { eventID: 'purchase-' + id });
     try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch(e){}
   })();
 </script>

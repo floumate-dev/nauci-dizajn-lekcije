@@ -308,7 +308,7 @@
           return;
         }
         sending = true;
-        // Jedinstveni ID upita: ide u Make (kolona event_id) i na hvala.html kao eventID za Meta Lead,
+        // Jedinstveni ID upita: ide u Make (kolona event_id) i na hvala.html kao eventID za Meta Purchase,
         // da kasnije može da se uradi deduplikacija sa Conversions API-jem.
         var leadId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
         var payload = buildPayload();
@@ -331,7 +331,7 @@
           if (!res.ok) throw new Error('Webhook ' + res.status);
           form.reset();
           to.min = '';
-          // Upit primljen: na thank you stranicu, gde se okida Meta Lead event.
+          // Upit primljen: na thank you stranicu, gde se okida Meta Purchase event.
           window.location.href = '../thank-you/?upit=' + encodeURIComponent(leadId);
         }).catch(function(){
           errorMsg.hidden = false;
