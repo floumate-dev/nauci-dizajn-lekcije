@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hvala na upitu · Mila Glamping Zlatibor</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Karla:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  a{text-decoration:none;color:inherit}
+  a:hover{opacity:.78}
+  html,body{height:100%}
+  body{background:#f4ede2;font-family:'Karla',sans-serif;color:#2e241c;overflow-x:hidden;display:flex;flex-direction:column}
+  .lang-btn{background:none;border:1px solid #b5623c;color:#b5623c;font-family:'Karla',sans-serif;font-size:12px;letter-spacing:.08em;padding:8px 12px;border-radius:2px;cursor:pointer;}
+  .lang-btn:hover{background:#b5623c;color:#f4ede2;}
+  h1,p{text-wrap:balance}
+  @media (max-width:640px){
+    h1{font-size:40px !important;}
+    .pad{padding-left:24px !important;padding-right:24px !important;padding-top:52px !important;padding-bottom:52px !important;}
+    .nav-inner{padding-left:24px !important;padding-right:24px !important;}
+  }
+</style>
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1097774762580497');
+  fbq('track', 'PageView');
+
+  // Lead se okida samo kad posetilac stigne posle uspešno poslatog upita (/thank-you/?upit=ID).
+  // Posle okidanja parametar se briše iz adrese, pa osvežavanje stranice (ili IG/FB in-app
+  // browser koji sam osveži stranicu) ne šalje Lead ponovo. Direktna poseta = samo PageView.
+  (function(){
+    var id = '';
+    try { id = new URLSearchParams(window.location.search).get('upit') || ''; } catch(e){}
+    if (!id) return;
+    fbq('track', 'Lead', { content_name: 'Upit za boravak' }, { eventID: 'lead-' + id });
+    try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch(e){}
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=1097774762580497&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+
+  <!-- nav -->
+  <nav style="position:sticky;top:0;z-index:100;background:rgba(244,237,226,.9);backdrop-filter:blur(10px);border-bottom:1px solid #e3d6c2;">
+    <div class="nav-inner" style="display:flex;align-items:center;justify-content:space-between;max-width:1280px;margin:0 auto;padding:20px 56px;">
+    <a href="../landing/" style="font-family:'Marcellus',serif;font-size:26px;letter-spacing:.14em;">MILA</a>
+    <button class="lang-btn" id="langToggle" type="button">EN</button>
+    </div>
+  </nav>
+
+  <!-- hvala -->
+  <main class="pad" style="flex:1;display:flex;align-items:center;justify-content:center;padding:88px 56px;">
+    <div style="max-width:620px;text-align:center;">
+      <div style="font-size:13px;letter-spacing:.24em;color:#b5623c;margin-bottom:22px;" data-en="INQUIRY RECEIVED">UPIT JE STIGAO</div>
+      <h1 style="font-family:'Marcellus',serif;font-size:56px;line-height:1.15;margin-bottom:26px;" data-en="Thank you, see you on the mountain">Hvala, vidimo se na planini</h1>
+      <p style="font-size:19px;line-height:1.65;color:#5a4d40;margin-bottom:14px;" data-en="We'll get back to you within 24 hours with availability and the exact price for your dates.">Javljamo ti se u roku od 24h sa dostupnošću i tačnom cenom za tvoje datume.</p>
+      <p style="font-size:16px;line-height:1.65;color:#8a7355;margin-bottom:40px;" data-en="If you don't see our email, check your spam folder.">Ako ne vidiš naš email, proveri i spam folder.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <a href="../landing/" style="background:#2e241c;color:#f4ede2;font-size:14px;letter-spacing:.06em;padding:16px 30px;border-radius:2px;" data-en="Back to home">Nazad na početnu</a>
+        <a href="../utisci/" style="border:1.5px solid #2e241c;color:#2e241c;font-size:14px;letter-spacing:.06em;padding:16px 30px;border-radius:2px;" data-en="Read guest reviews">Pročitaj utiske gostiju</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- footer -->
+  <div class="pad" style="padding:56px;background:#2e241c;color:#c9b9a5;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;">
+    <div>
+      <div style="font-family:'Marcellus',serif;font-size:30px;letter-spacing:.14em;color:#f4ede2;margin-bottom:12px;">MILA</div>
+      <div style="font-size:14px;line-height:1.7;" data-en="A-frame glamping · Zlatibor">A-frame glamping · Zlatibor</div>
+    </div>
+    <div style="font-size:14px;line-height:1.9;text-align:right;">
+      <div>tel · [telefon]</div><div>mail · [email]</div><div>ig · [@instagram]</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      var toggle = document.getElementById('langToggle');
+      var nodes = document.querySelectorAll('[data-en]');
+      nodes.forEach(function(n){ n.setAttribute('data-sr', n.innerHTML); });
+      function apply(lang){
+        nodes.forEach(function(n){
+          n.innerHTML = n.getAttribute(lang === 'en' ? 'data-en' : 'data-sr');
+        });
+        document.documentElement.lang = lang;
+        toggle.textContent = lang === 'en' ? 'SR' : 'EN';
+        try { localStorage.setItem('mila_lang', lang); } catch(e){}
+      }
+      var saved = 'sr';
+      try { saved = localStorage.getItem('mila_lang') || 'sr'; } catch(e){}
+      apply(saved);
+      toggle.addEventListener('click', function(){
+        apply(document.documentElement.lang === 'en' ? 'sr' : 'en');
+      });
+    })();
+  </script>
+
+</body>
+</html>
