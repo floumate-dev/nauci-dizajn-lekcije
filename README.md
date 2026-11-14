@@ -9,7 +9,7 @@ landing/index.html     /landing     početna (forma za upit)
 thank-you/index.html   /thank-you   thank you stranica posle poslatog upita (noindex)
 utisci/index.html      /utisci      utisci gostiju
 index.html             /            redirect na /landing
-images/                hero.png, enterijer.png, terasa.png, terasa-2.png, spavaci.png, dusk.png, mapa.png
+images/                hero.webp, enterijer.webp, terasa.webp, terasa-2.webp, spavaci.webp, dusk.webp, mapa.webp
 ```
 
 Svi linkovi i slike su relativni (`../images/`, `../thank-you/`), pa sajt radi i u podfolderu (GitHub Pages project site) i na root domenu.
@@ -23,7 +23,7 @@ Bilo koji statički hosting radi (Netlify, Vercel, Cloudflare Pages, GitHub Page
 1. Forma za upit (`#upit` u landing/index.html) šalje sve podatke na Make webhook (`WEBHOOK_URL` u skripti na dnu), Make ih upisuje u Google Sheet. Polja iz forme: ime, email, telefon, gosti, dolazak, odlazak, poruka. Dodatno: gosti_tekst, dolazak_format, odlazak_format, broj_noci, vreme_slanja, vreme_slanja_iso, jezik, stranica, referrer, utm_source/medium/campaign/term/content, fbclid, gclid, uredjaj, user_agent. Make scenario mora biti uključen, inače webhook vraća 410 i forma prikazuje grešku.
 2. Dugmad "Rezerviši na Booking", "Pogledaj na Airbnb" i "Proveri dostupnost" imaju `href="#"`. Ubaciti prave linkove.
 3. Futer na obe stranice: zameniti `[telefon]`, `[email]`, `[@instagram]`.
-4. Slike su PNG od 1.5 do 3 MB. Preporuka: konvertovati u WebP ili JPG oko 1600px širine, da se sajt brže učitava.
+4. Slike su WebP (quality 82, ukupno oko 1 MB), konvertovane iz originalnih PNG-ova (13 MB).
 
 ## Jezik
 
