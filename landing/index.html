@@ -270,6 +270,13 @@
         try { return new URLSearchParams(window.location.search).get(name) || ''; } catch(e){ return ''; }
       }
 
+      function cookie(name){
+        try {
+          var m = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+          return m ? decodeURIComponent(m[1]) : '';
+        } catch(e){ return ''; }
+      }
+
       function buildPayload(){
         var data = new URLSearchParams();
         // 1) Sva polja iz forme (automatski uključuje i polja koja se kasnije dodaju)
@@ -293,7 +300,16 @@
         ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid'].forEach(function(k){
           data.append(k, urlParam(k));
         });
-        // 4) Uređaj
+        // 4) Meta identifikatori za Conversions API (uparivanje servera sa posetiocem)
+        // _fbp = ID pregledača koji postavlja Pixel; _fbc = ID klika na oglas (iz fbclid).
+        // Ako _fbc kolačić ne postoji, a u adresi ima fbclid, sami ga sastavljamo po Meta formatu.
+        var fbp = cookie('_fbp');
+        var fbc = cookie('_fbc');
+        var fbclid = urlParam('fbclid');
+        if (!fbc && fbclid) fbc = 'fb.1.' + Date.now() + '.' + fbclid;
+        data.append('fbp', fbp);
+        data.append('fbc', fbc);
+        // 5) Uređaj
         data.append('uredjaj', /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobilni' : 'desktop');
         data.append('user_agent', navigator.userAgent);
         return data;
