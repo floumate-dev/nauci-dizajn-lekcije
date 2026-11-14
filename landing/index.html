@@ -40,6 +40,24 @@
     .nav-inner{padding-left:24px !important;padding-right:24px !important;}
   }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1097774762580497');
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=1097774762580497&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
@@ -290,7 +308,8 @@
           return;
         }
         sending = true;
-        // Jedinstveni ID upita: ide u Make (kolona event_id).
+        // Jedinstveni ID upita: ide u Make (kolona event_id) i na hvala.html kao eventID za Meta Lead,
+        // da kasnije može da se uradi deduplikacija sa Conversions API-jem.
         var leadId = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
         var payload = buildPayload();
         payload.append('event_id', leadId);
@@ -312,8 +331,8 @@
           if (!res.ok) throw new Error('Webhook ' + res.status);
           form.reset();
           to.min = '';
-          // Upit primljen: na thank you stranicu.
-          window.location.href = '../thank-you/';
+          // Upit primljen: na thank you stranicu, gde se okida Meta Lead event.
+          window.location.href = '../thank-you/?upit=' + encodeURIComponent(leadId);
         }).catch(function(){
           errorMsg.hidden = false;
         }).then(function(){

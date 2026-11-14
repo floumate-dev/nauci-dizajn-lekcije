@@ -28,3 +28,13 @@ Bilo koji statički hosting radi (Netlify, Vercel, Cloudflare Pages, GitHub Page
 ## Jezik
 
 SR/EN prekidač radi preko `data-en` atributa na elementima. Izabrani jezik se pamti u localStorage (`mila_lang`).
+
+## Meta Pixel
+
+Pixel ID `1097774762580497` je u `<head>` sve tri stranice.
+
+- `/landing`, `/utisci`: `PageView`.
+- `/thank-you`: `PageView` + `Lead`.
+
+Tok: forma šalje upit na Make webhook, i tek kad webhook vrati uspeh, posetilac ide na `/thank-you/?upit=<ID>`. Lead se okida samo kad postoji parametar `upit`, sa `eventID = lead-<ID>`. Isti ID ide u Make kao polje `event_id` (za buduću deduplikaciju sa Conversions API-jem). Posle okidanja parametar se briše iz adrese, pa refresh ne duplira Lead. Direktno otvaranje `/thank-you` daje samo PageView.
+

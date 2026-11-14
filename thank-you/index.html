@@ -23,6 +23,35 @@
     .nav-inner{padding-left:24px !important;padding-right:24px !important;}
   }
 </style>
+<!-- Meta Pixel Code -->
+<script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1097774762580497');
+  fbq('track', 'PageView');
+
+  // Lead se okida samo kad posetilac stigne posle uspešno poslatog upita (/thank-you/?upit=ID).
+  // Posle okidanja parametar se briše iz adrese, pa osvežavanje stranice (ili IG/FB in-app
+  // browser koji sam osveži stranicu) ne šalje Lead ponovo. Direktna poseta = samo PageView.
+  (function(){
+    var id = '';
+    try { id = new URLSearchParams(window.location.search).get('upit') || ''; } catch(e){}
+    if (!id) return;
+    fbq('track', 'Lead', { content_name: 'Upit za boravak' }, { eventID: 'lead-' + id });
+    try { history.replaceState(null, '', window.location.pathname + window.location.hash); } catch(e){}
+  })();
+</script>
+<noscript>
+  <img height="1" width="1" style="display:none"
+       src="https://www.facebook.com/tr?id=1097774762580497&ev=PageView&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel Code -->
 </head>
 <body>
 
