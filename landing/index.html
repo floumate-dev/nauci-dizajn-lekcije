@@ -277,6 +277,52 @@
         } catch(e){ return ''; }
       }
 
+      // ---- Meta Conversions API: podaci za uparivanje servera sa posetiocem ----
+      // _fbp = ID pregledača koji postavlja Pixel. Ako ga nema (npr. blokator reklama),
+      // pravimo ga po istom Meta formatu (fb.1.<ms>.<nasumičan broj>) i čuvamo u kolačiću.
+      function metaFbp(){
+        var v = cookie('_fbp');
+        if (v) return v;
+        v = 'fb.1.' + Date.now() + '.' + Math.floor(1e9 + Math.random() * 9e9);
+        try { document.cookie = '_fbp=' + v + '; max-age=7776000; path=/; SameSite=Lax'; } catch(e){}
+        return v;
+      }
+      // _fbc = ID klika na oglas. Postoji samo kad je posetilac došao sa Meta oglasa (fbclid u adresi).
+      // Ako kolačić ne postoji, a fbclid postoji, sastavljamo ga sami. Inače prazno (ne izmišljamo klik).
+      function metaFbc(){
+        var v = cookie('_fbc');
+        if (v) return v;
+        var id = urlParam('fbclid');
+        return id ? 'fb.1.' + Date.now() + '.' + id : '';
+      }
+      function sha256(text){
+        return crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)).then(function(buf){
+          return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ('0' + b.toString(16)).slice(-2); }).join('');
+        });
+      }
+      // Gotov "user_data" objekat za Conversions API, kao JSON tekst (polje meta_user_data).
+      // Meta traži da lični podaci budu normalizovani pa SHA-256 heširani, i da prazna polja
+      // budu izostavljena, pa sve to radimo ovde. Make ga samo ubaci u zahtev ka Meti.
+      function metaUserData(){
+        var u = { client_user_agent: navigator.userAgent, fbp: metaFbp() };
+        var fbc = metaFbc();
+        if (fbc) u.fbc = fbc;
+        var email = (form.elements['email'].value || '').trim().toLowerCase();
+        // Telefon: samo cifre, sa pozivnim brojem zemlje (063... -> 38163..., +381/00381 -> 381...).
+        var phone = (form.elements['telefon'] ? form.elements['telefon'].value : '').replace(/\D/g, '').replace(/^00/, '').replace(/^0/, '381');
+        var names = (form.elements['ime'].value || '').trim().toLowerCase().split(/\s+/).filter(Boolean);
+        var pii = [];
+        if (email) pii.push(['em', email]);
+        if (phone.length >= 8) pii.push(['ph', phone]);
+        if (names.length) pii.push(['fn', names[0]]);
+        if (names.length > 1) pii.push(['ln', names[names.length - 1]]);
+        if (!window.crypto || !crypto.subtle || !window.TextEncoder) return Promise.resolve(JSON.stringify(u));
+        return Promise.all(pii.map(function(p){ return sha256(p[1]); })).then(function(hashes){
+          pii.forEach(function(p, i){ u[p[0]] = [hashes[i]]; });
+          return JSON.stringify(u);
+        }).catch(function(){ return JSON.stringify(u); });
+      }
+
       function buildPayload(){
         var data = new URLSearchParams();
         // 1) Sva polja iz forme (automatski uključuje i polja koja se kasnije dodaju)
@@ -300,15 +346,9 @@
         ['utm_source','utm_medium','utm_campaign','utm_term','utm_content','fbclid','gclid'].forEach(function(k){
           data.append(k, urlParam(k));
         });
-        // 4) Meta identifikatori za Conversions API (uparivanje servera sa posetiocem)
-        // _fbp = ID pregledača koji postavlja Pixel; _fbc = ID klika na oglas (iz fbclid).
-        // Ako _fbc kolačić ne postoji, a u adresi ima fbclid, sami ga sastavljamo po Meta formatu.
-        var fbp = cookie('_fbp');
-        var fbc = cookie('_fbc');
-        var fbclid = urlParam('fbclid');
-        if (!fbc && fbclid) fbc = 'fb.1.' + Date.now() + '.' + fbclid;
-        data.append('fbp', fbp);
-        data.append('fbc', fbc);
+        // 4) Meta identifikatori (čitljivi u Make-u; isti ulaze i u meta_user_data)
+        data.append('fbp', metaFbp());
+        data.append('fbc', metaFbc());
         // 5) Uređaj
         data.append('uredjaj', /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? 'mobilni' : 'desktop');
         data.append('user_agent', navigator.userAgent);
@@ -338,11 +378,15 @@
         // x-www-form-urlencoded: jednostavan zahtev bez CORS preflight-a, Make ga parsira
         // u zasebna polja. keepalive = stiže i ako korisnik odmah zatvori stranicu.
         // Make vraća CORS zaglavlje, pa čitamo status: hvala samo kad je upit stvarno primljen.
-        fetch(WEBHOOK_URL, {
-          method: 'POST',
-          keepalive: true,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
-          body: payload.toString()
+        // Prvo pripremamo heširani user_data za Conversions API (traje par milisekundi), pa šaljemo.
+        metaUserData().then(function(userData){
+          payload.append('meta_user_data', userData);
+          return fetch(WEBHOOK_URL, {
+            method: 'POST',
+            keepalive: true,
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+            body: payload.toString()
+          });
         }).then(function(res){
           if (!res.ok) throw new Error('Webhook ' + res.status);
           form.reset();
